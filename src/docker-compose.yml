@@ -1,0 +1,38 @@
+version: "3"
+
+services:
+  db:
+    image: mariadb:10
+    container_name: scr4-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    volumes:
+      - db:/var/lib/mysql
+
+  pma:
+    image: phpmyadmin/phpmyadmin:5
+    container_name: scr4-pma
+    depends_on:
+      - db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      PMA_PASSWORD: ${PMA_PASSWORD}
+    ports:
+      - 8081:80
+
+  apache:
+    image: php:8-apache
+    container_name: scr4-apache
+    depends_on:
+      - db
+    ports:
+      - 8080:80
+    volumes:
+      - ./:/var/www/html
+
+volumes:
+  db:
