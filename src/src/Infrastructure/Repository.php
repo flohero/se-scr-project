@@ -5,8 +5,9 @@ namespace Infrastructure;
 
 
 use Application\Entities\Product;
+use Application\Entities\User;
 
-class Repository implements \Application\Interfaces\ProductRepository {
+class Repository implements \Application\Interfaces\ProductRepository, \Application\Interfaces\UserRepository {
 
     public function __construct(
         private string $server,
@@ -61,5 +62,35 @@ class Repository implements \Application\Interfaces\ProductRepository {
             );
         }
         return $products;
+    }
+
+    public function insertUser(string $username, string $password): int {
+        $hash = password_hash($password,  PASSWORD_DEFAULT);
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'INSERT INTO users (username, password) VALUES (?, ?)',
+            function (\mysqli_stmt $stmt) use ($username, $hash) {
+                $stmt->bind_param('ss', $username, $hash);
+            }
+        );
+        return $statement->insert_id;
+    }
+
+    public function findUserByUsername(string $username): ?User {
+        $user = null;
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, username, password FROM users WHERE username = ?',
+            function (\mysqli_stmt $stmt) use ($username) {
+                $stmt->bind_param('s', $username);
+            }
+        );
+        $statement->bind_result($id, $username, $password);
+        if($statement->fetch()) {
+            $user = new User($id, $username, $password);
+        }
+        return $user;
     }
 }

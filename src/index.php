@@ -16,6 +16,7 @@ $sp = new \ServiceProvider();
 
 // --- Application
 $sp->register(\Application\Queries\ProductsQuery::class);
+$sp->register(\Application\Commands\RegisterCommand::class);
 
 // --- Infrastructure
 $sp->register(\Infrastructure\Session::class, isSingleton: true);
@@ -26,6 +27,7 @@ $sp->register(\Infrastructure\Repository::class,
         return new \Infrastructure\Repository("127.0.0.1", "root", "toor", "product_rating");
     });
 $sp->register(\Application\Interfaces\ProductRepository::class, \Infrastructure\Repository::class);
+$sp->register(\Application\Interfaces\UserRepository::class, \Infrastructure\Repository::class);
 
 // --- Presentation
 // MVC - Framework
