@@ -4,23 +4,22 @@
 namespace Application\Queries;
 
 
-use Application\DTOs\UserDTO;
-use Application\Interfaces\ProductRepository;
 use Application\DTOs\ProductDTO;
-use Application\Interfaces\UserRepository;
+use Application\Interfaces\ProductRepository;
 
-class ProductsQuery {
+class ProductDetailsQuery {
     public function __construct(
         private ProductRepository $productRepository,
         private UserByIdQuery $userByIdQuery
     ) {
     }
 
-    public function execute(): array {
-        $res = [];
-        foreach ($this->productRepository->findAllProducts() as $product) {
+    public function execute(int $pid): ?ProductDTO {
+        $product = $this->productRepository->findProductById($pid);
+        $productDTO = null;
+        if($product != null) {
             $userDTO = $this->userByIdQuery->execute($product->getUserId());
-            $res[] = new ProductDTO(
+            $productDTO = new ProductDTO(
                 $product->getId(),
                 $userDTO,
                 $product->getName(),
@@ -28,7 +27,7 @@ class ProductsQuery {
                 $product->getDescription()
             );
         }
-        return $res;
+        return $productDTO;
     }
 
 }

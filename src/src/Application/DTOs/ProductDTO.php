@@ -7,7 +7,7 @@ namespace Application\DTOs;
 class ProductDTO {
     public function __construct(
         private int $id,
-        private int $userId,
+        private UserDTO $user,
         private string $name,
         private string $manufacturer,
         private string $description
@@ -18,8 +18,8 @@ class ProductDTO {
         return $this->id;
     }
 
-    public function getUserId(): int {
-        return $this->userId;
+    public function getUser(): UserDTO {
+        return $this->user;
     }
 
     public function getName(): string {

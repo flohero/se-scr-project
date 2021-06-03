@@ -64,6 +64,23 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
         return $products;
     }
 
+    public function findProductById(int $pid): Product {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, userId, name, manufacturer, description FROM products WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($pid) {
+                $stmt->bind_param('i', $pid);
+            }
+        );
+        $product = null;
+        $statement->bind_result($id, $userId, $name, $manufacturer, $description);
+        if($statement->fetch()) {
+            $product = new Product($id, $userId, $name, $manufacturer, $description);
+        }
+        return $product;
+    }
+
     public function insertUser(string $username, string $password): int {
         $hash = password_hash($password,  PASSWORD_DEFAULT);
         $conn = $this->getConnection();

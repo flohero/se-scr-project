@@ -15,7 +15,9 @@ spl_autoload_register(function ($class) {
 $sp = new \ServiceProvider();
 
 // --- Application
+$sp->register(\Application\Queries\UserByIdQuery::class);
 $sp->register(\Application\Queries\ProductsQuery::class);
+$sp->register(\Application\Queries\ProductDetailsQuery::class);
 $sp->register(\Application\Queries\LoggedInUserQuery::class);
 $sp->register(\Application\Commands\RegisterCommand::class);
 $sp->register(\Application\Commands\LoginCommand::class);
