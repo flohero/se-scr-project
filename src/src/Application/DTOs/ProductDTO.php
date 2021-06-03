@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Application;
+namespace Application\DTOs;
 
 
 class ProductDTO {

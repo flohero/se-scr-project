@@ -5,7 +5,7 @@ namespace Application\Queries;
 
 
 use Application\Interfaces\ProductRepository;
-use Application\ProductDTO;
+use Application\DTOs\ProductDTO;
 
 class ProductsQuery {
     public function __construct(private ProductRepository $productRepository) {
@@ -18,10 +18,11 @@ class ProductsQuery {
                 $product->getId(),
                 $product->getUserId(),
                 $product->getName(),
-                $product->getManifacturer(),
+                $product->getManufacturer(),
                 $product->getDescription()
             );
         }
+        return $res;
     }
 
 }
