@@ -1,4 +1,4 @@
-<footer class="bg-light mt-3">
+<footer class="bg-light mt-3 fixed-bottom">
     <div class="container">
         <p class="text-muted p-0"><?php echo htmlentities(strftime('%c')); ?></p>
     </div>

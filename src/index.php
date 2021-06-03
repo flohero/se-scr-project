@@ -35,7 +35,7 @@ $sp->register(Presentation\MVC\MVC::class, function () {
 
 //controllers
 $sp->register(Presentation\Controllers\Home::class);
-$sp->register(Presentation\Controllers\Login::class);
+$sp->register(Presentation\Controllers\User::class);
 $sp->register(Presentation\Controllers\Products::class);
 
 // === handle requests
