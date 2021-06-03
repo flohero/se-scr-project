@@ -11,7 +11,7 @@ class Login extends Controller {
     public function __construct() {
     }
 
-    public function GET_login(): ActionResult {
+    public function GET_index(): ActionResult {
         return $this->view("login", []);
     }
 }

@@ -7,7 +7,8 @@
         <div class="collapse navbar-collapse" id="navbar">
             <nav class="navbar-nav me-auto">
                 <?php $link("Home", "Home", "Index", cssClass: 'nav-item nav-link'); ?>
-                <?php $link("Login", "Login", "Login", cssClass: 'nav-item nav-link'); ?>
+                <?php $link("Login", "Login", "Index", cssClass: 'nav-item nav-link'); ?>
+                <?php $link("Products", "Products", "Index", cssClass: 'nav-item nav-link'); ?>
             </nav>
             <!-- TODO: navigation user -->
         </div>
