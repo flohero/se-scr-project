@@ -6,7 +6,7 @@
 <div class="container mt-3 w-25">
     <h1 class="bd-title">Login</h1>
 
-    <?php $beginForm('User', 'User', method: 'post'); ?>
+    <?php $beginForm('User', 'Login', method: 'post'); ?>
     <div class="mt-3 form-group">
         <label for="username" class="form-label">Username</label>
         <input id="username" name="username" placeholder="Username" type="text" class="form-control" required>
@@ -20,6 +20,7 @@
         <?php $link("Register", "User", "Register", cssClass: 'btn btn-secondary'); ?>
     </div>
     <?php $endForm(); ?>
+    <?php $render("partial/errors", ["errors" => $data["errors"]]); ?>
 </div>
 <?php $render('partial/footer', $data) ?>
 </body>

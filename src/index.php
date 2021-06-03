@@ -16,7 +16,13 @@ $sp = new \ServiceProvider();
 
 // --- Application
 $sp->register(\Application\Queries\ProductsQuery::class);
+$sp->register(\Application\Queries\LoggedInUserQuery::class);
 $sp->register(\Application\Commands\RegisterCommand::class);
+$sp->register(\Application\Commands\LoginCommand::class);
+$sp->register(\Application\Commands\LogoutCommand::class);
+
+// --- Services
+$sp->register(\Application\Services\AuthenticationService::class);
 
 // --- Infrastructure
 $sp->register(\Infrastructure\Session::class, isSingleton: true);

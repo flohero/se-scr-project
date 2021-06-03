@@ -93,4 +93,29 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
         }
         return $user;
     }
+
+    public function findUserByUsernameAndPassword(string $username, string $password): ?User {
+        $user = $this->findUserByUsername($username);
+        if($user != null && !password_verify($password, $user->getPassword())) {
+            $user = null;
+        }
+        return $user;
+    }
+
+    public function findUserById(int $id): ?User {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, username, password FROM users WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($id) {
+                $stmt->bind_param('i', $id);
+            }
+        );
+        $user = null;
+        $statement->bind_result($id, $username, $password);
+        if($statement->fetch()) {
+            $user = new User($id, $username, $password);
+        }
+        return $user;
+    }
 }

@@ -18,12 +18,19 @@
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <?php $link("Login", "User", "Login", cssClass: 'nav-item nav-link'); ?>
-                </li>
-                <li class="nav-item">
-                    <?php $link("Register", "User", "Register", cssClass: 'nav-item nav-link'); ?>
-                </li>
+                <?php if ($data["user"] == null) { ?>
+                    <li class="nav-item">
+                        <?php $link("Login", "User", "Login", cssClass: 'nav-item nav-link'); ?>
+                    </li>
+                    <li class="nav-item">
+                        <?php $link("Register", "User", "Register", cssClass: 'nav-item nav-link'); ?>
+                    </li>
+                <?php } else { ?>
+                    <?php $beginForm('User', 'LogOut', method: 'post', cssClass: 'form-inline'); ?>
+                    <span class="navbar-text me-2">Welcome, <strong><?php $htmlOut($data["user"]->getUsername()); ?></strong>.</span>
+                    <button class="btn btn-secondary">Log out</button>
+                    <?php $endForm(); ?>
+                <?php } ?>
             </ul>
         </div>
     </div>

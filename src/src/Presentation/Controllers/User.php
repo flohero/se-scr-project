@@ -4,23 +4,65 @@
 namespace Presentation\Controllers;
 
 
+use Application\Commands\LoginCommand;
+use Application\Commands\LogoutCommand;
 use Application\Commands\RegisterCommand;
+use Application\Queries\LoggedInUserQuery;
 use Presentation\MVC\ActionResult;
 use Presentation\MVC\Controller;
 
 class User extends Controller {
-    public function __construct(private RegisterCommand $registerCommand) {
+    public function __construct(
+        private RegisterCommand $registerCommand,
+        private LoginCommand $loginCommand,
+        private LoggedInUserQuery $loggedInUserQuery,
+        private LogoutCommand $logoutCommand
+    ) {
+    }
+
+    private function userLoggedIn(): bool {
+        return $this->loggedInUserQuery->execute() != null;
     }
 
     public function GET_Login(): ActionResult {
+        if ($this->userLoggedIn()) {
+            return $this->redirect("Home", "Index");
+        }
         return $this->view("login", []);
     }
 
+    public function POST_Login(): ActionResult {
+        if ($this->userLoggedIn()) {
+            return $this->redirect("Home", "Index");
+        }
+        $username = $this->getParam("username");
+        $password = $this->getParam("password");
+        $loggedIn = $this->loginCommand->execute($username, $password);
+        if (!$loggedIn) {
+            return $this->view("login", [
+                "username" => $username,
+                "errors" => ["Invalid Username/Password"]
+            ]);
+        }
+        return $this->redirect("Home", "Index");
+    }
+
+    public function POST_Logout(): ActionResult {
+        $this->logoutCommand->execute();
+        return $this->redirect("Home", "Index");
+    }
+
     public function GET_Register(): ActionResult {
+        if ($this->userLoggedIn()) {
+            return $this->redirect("Home", "Index");
+        }
         return $this->view("register", []);
     }
 
     public function POST_Register(): ActionResult {
+        if ($this->userLoggedIn()) {
+            return $this->redirect("Home", "Index");
+        }
         $username = $this->getParam("username");
         $password = $this->getParam("password");
         $repeatPassword = $this->getParam("repeat-password");
@@ -52,7 +94,6 @@ class User extends Controller {
                 'username' => $username
             ]);
         }
-        //TODO: Check if user is already logged in
         return $this->redirect("Home", "Index");
     }
 }
