@@ -10,7 +10,9 @@ class ProductDTO {
         private UserDTO $user,
         private string $name,
         private string $manufacturer,
-        private string $description
+        private string $description,
+        private int $ratingCount,
+        private float $averageRating
     ) {
     }
 
@@ -33,4 +35,13 @@ class ProductDTO {
     public function getDescription(): string {
         return $this->description;
     }
+
+    public function getRatingCount(): int {
+        return $this->ratingCount;
+    }
+
+    public function getAverageRating(): float {
+        return $this->averageRating;
+    }
+
 }

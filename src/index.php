@@ -23,6 +23,8 @@ $sp->register(\Application\Queries\RatingsByProductQuery::class);
 $sp->register(\Application\Queries\RatingByUserAndProductQuery::class);
 $sp->register(\Application\Queries\RatingByIdQuery::class);
 $sp->register(\Application\Queries\CategoriesQuery::class);
+$sp->register(\Application\Queries\RatingCountPerProductQuery::class);
+$sp->register(\Application\Queries\AverageRatingScorePerProductQuery::class);
 
 $sp->register(\Application\Commands\RegisterCommand::class);
 $sp->register(\Application\Commands\LoginCommand::class);

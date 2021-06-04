@@ -23,7 +23,10 @@
                 <h6 class="card-subtitle mb-2 text-muted">By <?php echo $product->getManufacturer() ?></h6>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Rating: <!-- TODO: display rating --></li>
+                <li class="list-group-item">Rating:
+                    <?php echo number_format ( $product->getAverageRating(), decimals: 2); ?>/5
+                    (<?php echo $product->getRatingCount(); ?>)
+                </li>
             </ul>
             <div class="card-body">
                 <p class="card-text"><?php echo substr($product->getDescription(), 0, 255) ?>...</p>

@@ -12,7 +12,9 @@ use Application\Interfaces\UserRepository;
 class ProductsQuery {
     public function __construct(
         private ProductRepository $productRepository,
-        private UserByIdQuery $userByIdQuery
+        private UserByIdQuery $userByIdQuery,
+        private RatingCountPerProductQuery $ratingCountPerProductQuery,
+        private AverageRatingScorePerProductQuery $averageRatingScorePerProductQuery
     ) {
     }
 
@@ -30,7 +32,9 @@ class ProductsQuery {
                 $userDTO,
                 $product->getName(),
                 $product->getManufacturer(),
-                $product->getDescription()
+                $product->getDescription(),
+                $this->ratingCountPerProductQuery->execute($product->getId()),
+                $this->averageRatingScorePerProductQuery->execute($product->getId())
             );
         }
         return $res;

@@ -61,7 +61,7 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         );
         $category = null;
         $stmt->bind_result($cid, $name);
-        if($stmt->fetch()) {
+        if ($stmt->fetch()) {
             $category = new Category($cid, $name);
         }
         return $category;
@@ -195,13 +195,13 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
     /**
      * @throws \Exception
      */
-    public function findRatingsByProduct(int $rid): array {
+    public function findRatingsByProduct(int $pid): array {
         $conn = $this->getConnection();
         $statement = $this->executeStatement(
             $conn,
             'SELECT id, productId, userId, score, created, title, content FROM ratings WHERE productId = ? ORDER BY created',
-            function (\mysqli_stmt $stmt) use ($rid) {
-                $stmt->bind_param('i', $rid);
+            function (\mysqli_stmt $stmt) use ($pid) {
+                $stmt->bind_param('i', $pid);
             }
         );
         $ratings = [];
@@ -287,5 +287,37 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
             }
         );
         return $statement->affected_rows > 0;
+    }
+
+    public function countRatingPerProduct(int $pid): int {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT COUNT(id) FROM ratings WHERE productId = ?',
+            function (\mysqli_stmt $stmt) use ($pid) {
+                $stmt->bind_param('i', $pid);
+            }
+        );
+        $statement->bind_result($count);
+        if ($statement->fetch()) {
+            return $count;
+        }
+        return 0;
+    }
+
+    public function averageRatingScorePerProduct(int $pid): float {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT AVG(score) AS avg FROM ratings WHERE productId = ?',
+            function (\mysqli_stmt $stmt) use ($pid) {
+                $stmt->bind_param('i', $pid);
+            }
+        );
+        $statement->bind_result($avg);
+        if ($statement->fetch() && isset($avg)) {
+            return $avg;
+        }
+        return 0.0;
     }
 }
