@@ -4,7 +4,18 @@
 <body>
 <?php $render('partial/navbar', $data) ?>
 <div class="container mt-3 mb-5 w-75 d-flex flex-column flex-wrap justify-content-center">
-
+    <div class="container-fluid mb-3">
+        <?php $link("All", "Products", "Index",
+            cssClass: ("btn " . (isset($data["selectedCategory"]) ? "btn-outline-primary" : "btn-primary"))) ?>
+        <?php foreach ($data["categories"] as $category) { ?>
+            <?php $link($category->getName(), "Products", "Index", params: ["cid" => $category->getId()],
+                cssClass: "btn " . (isset($data["selectedCategory"]) && $data["selectedCategory"] == $category->getId()
+                    ? "btn-primary" : "btn-outline-primary")) ?>
+        <?php } ?>
+    </div>
+    <?php if (count($data['products']) == 0) { ?>
+        <h2>Nothing Here</h2>
+    <?php } ?>
     <?php foreach ($data['products'] as $product) { ?>
         <div class="card mb-3">
             <div class="card-body">

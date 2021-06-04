@@ -16,9 +16,14 @@ class ProductsQuery {
     ) {
     }
 
-    public function execute(): array {
+    public function execute(?int $cid): array {
         $res = [];
-        foreach ($this->productRepository->findAllProducts() as $product) {
+        if (!isset($cid)) {
+            $products = $this->productRepository->findAllProducts();
+        } else {
+            $products = $this->productRepository->findAllProductsByCategory($cid);
+        }
+        foreach ($products as $product) {
             $userDTO = $this->userByIdQuery->execute($product->getUserId());
             $res[] = new ProductDTO(
                 $product->getId(),

@@ -120,6 +120,23 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         return $product;
     }
 
+    public function findAllProductsByCategory(int $cid): array {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE categoryId = ?',
+            function (\mysqli_stmt $stmt) use ($cid) {
+                $stmt->bind_param('i', $cid);
+            }
+        );
+        $products = [];
+        $statement->bind_result($id, $userId, $categoryId, $name, $manufacturer, $description);
+        while ($statement->fetch()) {
+            $products[] = new Product($id, $userId, $categoryId, $name, $manufacturer, $description);
+        }
+        return $products;
+    }
+
     public function insertUser(string $username, string $password): int {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $conn = $this->getConnection();

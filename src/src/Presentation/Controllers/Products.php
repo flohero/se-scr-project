@@ -4,6 +4,7 @@
 namespace Presentation\Controllers;
 
 
+use Application\Queries\CategoriesQuery;
 use Application\Queries\LoggedInUserQuery;
 use Application\Queries\ProductDetailsQuery;
 use Application\Queries\ProductsQuery;
@@ -23,14 +24,20 @@ class Products extends Controller {
         private LoggedInUserQuery $loggedInUserQuery,
         private ProductDetailsQuery $productDetailsQuery,
         private RatingsByProductQuery $ratingsByProductQuery,
-        private RatingByUserAndProductQuery $ratingByUserAndProductQuery
+        private RatingByUserAndProductQuery $ratingByUserAndProductQuery,
+        private CategoriesQuery $categoriesQuery
     ) {
     }
 
     public function GET_Index(): ViewResult {
+        $cid = null;
+        $this->tryGetParam("cid", $cid);
+
         return $this->view("productlist", [
-            "products" => $this->productsQuery->execute(),
-            "user" =>$this->loggedInUserQuery->execute()
+            "products" => $this->productsQuery->execute($cid),
+            "categories" => $this->categoriesQuery->execute(),
+            "user" => $this->loggedInUserQuery->execute(),
+            "selectedCategory" => $cid
         ]);
     }
 
@@ -39,18 +46,18 @@ class Products extends Controller {
         $pidstr = "";
         $product = null;
         $pid = 0;
-        if(!$this->tryGetParam(self::PRODUCT_ID, $pidstr)) {
+        if (!$this->tryGetParam(self::PRODUCT_ID, $pidstr)) {
             $errors[] = self::PRODUCT_NOT_FOUND;
         } else {
             $pid = intval($pidstr);
-            if($pid != 0) {
+            if ($pid != 0) {
                 $product = $this->productDetailsQuery->execute($pid);
             }
-            if($product == null) {
+            if ($product == null) {
                 $errors[] = self::PRODUCT_NOT_FOUND;
             }
         }
-        if(count($errors) > 0) {
+        if (count($errors) > 0) {
             return $this->redirect("Error", "Index", $errors);
         }
         $user = $this->loggedInUserQuery->execute();
