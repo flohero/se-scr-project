@@ -5,6 +5,7 @@ namespace Presentation\Controllers;
 
 
 use Application\Commands\CreateProductCommand;
+use Application\Commands\UpdateProductCommand;
 use Application\Queries\CategoriesQuery;
 use Application\Queries\LoggedInUserQuery;
 use Application\Queries\ProductDetailsQuery;
@@ -32,7 +33,8 @@ class Products extends Controller {
         private RatingsByProductQuery $ratingsByProductQuery,
         private RatingByUserAndProductQuery $ratingByUserAndProductQuery,
         private CategoriesQuery $categoriesQuery,
-        private CreateProductCommand $createProductCommand
+        private CreateProductCommand $createProductCommand,
+        private UpdateProductCommand $updateProductCommand,
     ) {
     }
 
@@ -67,23 +69,23 @@ class Products extends Controller {
     }
 
     public function Get_Details(): ActionResult {
-        $errors = [];
+        $errors = null;
         $pidstr = "";
         $product = null;
         $pid = 0;
         if (!$this->tryGetParam(self::PRODUCT_ID, $pidstr)) {
-            $errors[] = self::PRODUCT_NOT_FOUND;
+            $errors[] = true;
         } else {
             $pid = intval($pidstr);
             if ($pid != 0) {
                 $product = $this->productDetailsQuery->execute($pid);
             }
             if ($product == null) {
-                $errors[] = self::PRODUCT_NOT_FOUND;
+                $errors[] = true;
             }
         }
-        if (count($errors) > 0) {
-            return $this->redirect("Error", "Index", $errors);
+        if (isset($errors)) {
+            return $this->redirect("Error", "404");
         }
         $user = $this->loggedInUserQuery->execute();
         return $this->view("productDetails", [
@@ -104,10 +106,10 @@ class Products extends Controller {
             "user" => $this->loggedInUserQuery->execute(),
             "categories" => $this->categoriesQuery->execute(),
         ];
-        if($this->tryGetParam(self::NAME, $name)) {
+        if ($this->tryGetParam(self::NAME, $name)) {
             $data[self::NAME] = $name;
         }
-        if($this->tryGetParam(self::MANUFACTURER, $manufacturer)) {
+        if ($this->tryGetParam(self::MANUFACTURER, $manufacturer)) {
             $data[self::MANUFACTURER] = $manufacturer;
         }
         if ($this->tryGetParam(self::CATEGORY, $category)) {
@@ -139,7 +141,7 @@ class Products extends Controller {
             $errors[] = "Content required";
         }
         if (count($errors) == 0) {
-            $pid = $this->createProductCommand->createProduct($category, $name, $manufacturer, $content);
+            $pid = $this->createProductCommand->execute($category, $name, $manufacturer, $content);
             if (isset($pid)) {
                 return $this->redirect("Products", "Details", [
                     self::PRODUCT_ID => $pid
@@ -152,8 +154,77 @@ class Products extends Controller {
             self::MANUFACTURER => $manufacturer,
             self::CATEGORY => $category,
             self::CONTENT => $content,
+            self::ERRORS => join("\n", $errors)
+        ]);
+    }
+
+    public function GET_Update(): ActionResult {
+        $user = $this->loggedInUserQuery->execute();
+        $errors = [];
+        if ($user == null) {
+            return $this->redirect("Home", "Index");
+        }
+        if ($this->tryGetParam(self::PRODUCT_ID, $pid)) {
+            $product = $this->productDetailsQuery->execute($pid);
+            if ($product->getUser()->getId() != $user->getId()) {
+                $this->redirect("Products", "Details", params: [self::PRODUCT_ID => $product->getId()]);
+            }
+        } else {
+            return $this->redirect("Error", "Index", $errors);
+        }
+        $categories = $this->categoriesQuery->execute();
+        $data = [
+            "user" => $this->loggedInUserQuery->execute(),
+            "categories" => $categories,
+            "product" => $product,
+            "errors" => $errors
+        ];
+        return $this->view("productEdit", $data);
+    }
+
+    public function POST_Update(): ActionResult {
+        $user = $this->loggedInUserQuery->execute();
+
+        if ($user == null) {
+            return $this->redirect("Home", "Index");
+        }
+        $errors = [];
+        if (!$this->tryGetParam(self::NAME, $name)) {
+            $errors[] = "Name required";
+        }
+        if (!$this->tryGetParam(self::MANUFACTURER, $manufacturer)) {
+            $errors[] = "Manufacturer required";
+        }
+        if (!$this->tryGetParam(self::CATEGORY, $category)) {
+            $errors[] = "Category required";
+        }
+        if (!$this->tryGetParam(self::CONTENT, $content)) {
+            $errors[] = "Content required";
+        }
+        if (!$this->tryGetParam(self::PRODUCT_ID, $pid)) {
+            $errors[] = self::PRODUCT_NOT_FOUND;
+        }
+        $product = null;
+        if (count($errors) == 0) {
+            $product = $this->productDetailsQuery->execute($pid);
+            if (!isset($product)) {
+                $errors[] = self::PRODUCT_NOT_FOUND;
+            }
+            $updated = $this->updateProductCommand->execute($product->getId(), $category, $name, $manufacturer, $content);
+            if ($updated) {
+                return $this->redirect("Products", "Details", [
+                    self::PRODUCT_ID => $pid
+                ]);
+            }
+            $errors[] = "Could not update Product";
+        }
+        return $this->view("productEdit", [
+            "product" => $product,
+            "categories" => $this->categoriesQuery->execute(),
+            "user" => $this->loggedInUserQuery->execute(),
             self::ERRORS => $errors
         ]);
     }
+
 
 }

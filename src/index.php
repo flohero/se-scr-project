@@ -32,6 +32,7 @@ $sp->register(\Application\Commands\CreateRatingCommand::class);
 $sp->register(\Application\Commands\UpdateRatingCommand::class);
 $sp->register(\Application\Commands\DeleteRatingCommand::class);
 $sp->register(\Application\Commands\CreateProductCommand::class);
+$sp->register(\Application\Commands\UpdateProductCommand::class);
 
 // --- Services
 $sp->register(\Application\Services\AuthenticationService::class);
@@ -61,6 +62,7 @@ $sp->register(Presentation\Controllers\Home::class);
 $sp->register(Presentation\Controllers\User::class);
 $sp->register(Presentation\Controllers\Products::class);
 $sp->register(Presentation\Controllers\Rating::class);
+$sp->register(Presentation\Controllers\Error::class);
 
 // === handle requests
 $sp->resolve(Presentation\MVC\MVC::class)->handleRequest($sp);

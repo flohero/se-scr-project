@@ -16,7 +16,7 @@ class CreateProductCommand {
     ) {
     }
 
-    public function createProduct(int $categoryId, string $name, string $manufacturer, string $description): ?int {
+    public function execute(int $categoryId, string $name, string $manufacturer, string $description): ?int {
         $user = $this->loggedInUserQuery->execute();
         if (!isset($user)) {
             return null;

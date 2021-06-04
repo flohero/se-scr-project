@@ -200,6 +200,17 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         );
         return $statement->insert_id;
     }
+    public function updateProduct(int $pid, int $category, string $name, string$manufacturer, string $content): bool {
+        $conn = $this->getConnection();
+        $stmt = $this->executeStatement(
+            $conn,
+            'UPDATE  products SET categoryId = ?, name = ?, manufacturer = ?, description = ? WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($pid, $category, $name, $manufacturer, $content) {
+                $stmt->bind_param('isssi', $category, $name, $manufacturer, $content, $pid);
+            }
+        );
+        return $stmt->affected_rows > 0;
+    }
 
     public function insertUser(string $username, string $password): int {
         $hash = password_hash($password, PASSWORD_DEFAULT);

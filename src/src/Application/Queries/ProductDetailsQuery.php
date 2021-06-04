@@ -24,6 +24,7 @@ class ProductDetailsQuery {
             $productDTO = new ProductDTO(
                 $product->getId(),
                 $userDTO,
+                $product->getCategoryId(),
                 $product->getName(),
                 $product->getManufacturer(),
                 $product->getDescription(),

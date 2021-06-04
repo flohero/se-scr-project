@@ -6,7 +6,12 @@
 <?php $render('partial/navbar', $data) ?>
 <div class="container mt-5 d-flex flex-column justify-content-center">
     <h1 class="bd-title"><?php echo $htmlOut($data["product"]->getName()) ?></h1>
-    <p class="text-muted">Produced by <?php echo $htmlOut($data["product"]->getManufacturer()) ?></p>
+    <div>
+        <span class="text-muted">Produced by <?php echo $htmlOut($data["product"]->getManufacturer()) ?></span>
+        <?php if ($data["product"]->getUser()->getId() == $data["user"]->getId()) { ?>
+            <?php $link("Edit", "Products", "Update", params: ["pid" => $data["product"]->getId()], cssClass: "mx-3 btn btn-outline-success") ?>
+        <?php } ?>
+    </div>
     <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
             <button class="nav-link" id="about-tab" data-bs-toggle="tab"
@@ -30,7 +35,7 @@
                 <?php if ($ratingExists) { ?>
                     <?php $formParams["ratingId"] = $data["userRating"]->getId() ?>
                 <?php } ?>
-                <?php $formParams = ["pid" => $data["product"]->getId()] ?>
+                <?php $formParams["pid"] = $data["product"]->getId() ?>
                 <?php $beginForm('Rating', $ratingExists ? 'Update' : 'Create', params: $formParams, method: 'post'); ?>
                 <h1>Review this Product</h1>
                 <?php if ($ratingExists) { ?>
@@ -41,7 +46,7 @@
                 <div class="form-group mt-3">
                     <label for="title">Title</label>
                     <input type="text" name="title" class="form-control" id="title" placeholder="Title"
-                        <?php if ($ratingExists) echo 'value="' . $htmlOut($data["userRating"]->getTitle()) . '"' ?>>
+                        <?php if ($ratingExists) echo 'value="' . $data["userRating"]->getTitle() . '"' ?>>
                 </div>
                 <div class="form-group mt-3">
                     <label for="content">Content</label>

@@ -8,6 +8,7 @@ class ProductDTO {
     public function __construct(
         private int $id,
         private UserDTO $user,
+        private int $categoryId,
         private string $name,
         private string $manufacturer,
         private string $description,
@@ -22,6 +23,10 @@ class ProductDTO {
 
     public function getUser(): UserDTO {
         return $this->user;
+    }
+
+    public function getCategoryId(): int {
+        return $this->categoryId;
     }
 
     public function getName(): string {
