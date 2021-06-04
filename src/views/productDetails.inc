@@ -5,8 +5,8 @@
 <body>
 <?php $render('partial/navbar', $data) ?>
 <div class="container mt-5 d-flex flex-column justify-content-center">
-    <h1 class="bd-title"><?php echo $data["product"]->getName() ?></h1>
-    <p class="text-muted">Produced by <?php echo $data["product"]->getManufacturer() ?></p>
+    <h1 class="bd-title"><?php echo $htmlOut($data["product"]->getName()) ?></h1>
+    <p class="text-muted">Produced by <?php echo $htmlOut($data["product"]->getManufacturer()) ?></p>
     <ul class="nav nav-tabs nav-fill">
         <li class="nav-item">
             <button class="nav-link" id="about-tab" data-bs-toggle="tab"
@@ -21,8 +21,8 @@
     </ul>
     <div class="tab-content mt-5 mb-5">
         <div class="tab-pane fade show" id="about" role="tabpanel">
-            <p><?php echo $data["product"]->getDescription(); ?></p>
-            <p class="text-muted">Created by <?php echo $data["product"]->getUser()->getUsername() ?></p>
+            <p><?php echo $htmlOut($data["product"]->getDescription()); ?></p>
+            <p class="text-muted">Created by <?php echo $htmlOut($data["product"]->getUser()->getUsername()) ?></p>
         </div>
         <div class="tab-pane fade show active" id="reviews" role="tabpanel">
             <?php $formParams = [] ?>
@@ -41,12 +41,12 @@
                 <div class="form-group mt-3">
                     <label for="title">Title</label>
                     <input type="text" name="title" class="form-control" id="title" placeholder="Title"
-                        <?php if ($ratingExists) echo 'value="' . $data["userRating"]->getTitle() . '"' ?>>
+                        <?php if ($ratingExists) echo 'value="' . $htmlOut($data["userRating"]->getTitle()) . '"' ?>>
                 </div>
                 <div class="form-group mt-3">
                     <label for="content">Content</label>
                     <textarea class="form-control" id="content" name="content"
-                              placeholder="Your Review"><?php if ($ratingExists) echo $data["userRating"]->getContent() ?></textarea>
+                              placeholder="Your Review"><?php if ($ratingExists) echo $htmlOut($data["userRating"]->getContent()) ?></textarea>
                 </div>
                 <div class="mt-3 form-group">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -68,7 +68,7 @@
                     <div class="card mt-3">
                         <div class="card-body">
                             <?php if ($rating->getTitle() !== null) { ?>
-                                <h5 class="card-title"><?php echo $rating->getTitle() ?></h5>
+                                <h5 class="card-title"><?php echo $htmlOut($rating->getTitle()) ?></h5>
                             <?php } ?>
 
                             <h5 class="card-title star">
@@ -79,10 +79,10 @@
                                 <?php } ?>
                             </h5>
                             <?php if ($rating->getContent() !== null) { ?>
-                                <?php echo $rating->getContent() ?>
+                                <?php echo $htmlOut($rating->getContent()) ?>
                             <?php } ?>
                             <h6 class="card-subtitle text-muted mt-3">
-                                from <?php echo $rating->getUser()->getUsername() ?>
+                                from <?php echo $htmlOut($rating->getUser()->getUsername()) ?>
                                 on <?php echo $rating->getCreated()->format('Y-m-d H:i') ?>
                             </h6>
                         </div>

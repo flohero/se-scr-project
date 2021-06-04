@@ -8,6 +8,11 @@
                 <li class="nav-item">
                     <?php $link("Products", "Products", "Index", cssClass: 'nav-item nav-link'); ?>
                 </li>
+                <div class="form-inline my-2 my-lg-0">
+                    <?php if (isset($data["user"])) { ?>
+                        <?php $link("Add", "Products", "Add", cssClass: 'btn btn-success my-2 my-sm-0'); ?>
+                    <?php } ?>
+                </div>
             </ul>
         </div>
         <div class="mx-auto order-0">

@@ -4,10 +4,8 @@
 namespace Application\Queries;
 
 
-use Application\DTOs\UserDTO;
 use Application\Interfaces\ProductRepository;
 use Application\DTOs\ProductDTO;
-use Application\Interfaces\UserRepository;
 
 class ProductsQuery {
     public function __construct(
@@ -18,12 +16,12 @@ class ProductsQuery {
     ) {
     }
 
-    public function execute(?int $cid): array {
+    public function execute(?int $cid, ?string $search): array {
         $res = [];
         if (!isset($cid)) {
-            $products = $this->productRepository->findAllProducts();
+            $products = $this->productRepository->findAllProductsByName($search);
         } else {
-            $products = $this->productRepository->findAllProductsByCategory($cid);
+            $products = $this->productRepository->findAllProductsByCategoryAndName($cid, $search);
         }
         foreach ($products as $product) {
             $userDTO = $this->userByIdQuery->execute($product->getUserId());

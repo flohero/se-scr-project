@@ -103,6 +103,35 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         return $products;
     }
 
+    public function findAllProductsByName(?string $filter): array {
+        if (isset($filter)) {
+            $filter = "%" . $filter . "%";
+        } else {
+            $filter = "%";
+        }
+        $products = [];
+        $conn = $this->getConnection();
+        $result = $this->executeStatement(
+            $conn,
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE name LIKE ?',
+            function (\mysqli_stmt $stmt) use ($filter) {
+                $stmt->bind_param("s", $filter);
+            }
+        );
+        $result->bind_result($id, $userId, $categoryId, $name, $manufacturer, $descirption);
+        while ($result->fetch()) {
+            $products[] = new Product(
+                $id,
+                $userId,
+                $categoryId,
+                $name,
+                $manufacturer,
+                $descirption,
+            );
+        }
+        return $products;
+    }
+
     public function findProductById(int $pid): ?Product {
         $conn = $this->getConnection();
         $statement = $this->executeStatement(
@@ -127,6 +156,28 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
             'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE categoryId = ?',
             function (\mysqli_stmt $stmt) use ($cid) {
                 $stmt->bind_param('i', $cid);
+            }
+        );
+        $products = [];
+        $statement->bind_result($id, $userId, $categoryId, $name, $manufacturer, $description);
+        while ($statement->fetch()) {
+            $products[] = new Product($id, $userId, $categoryId, $name, $manufacturer, $description);
+        }
+        return $products;
+    }
+
+    public function findAllProductsByCategoryAndName(int $cid, ?string $filter): array {
+        if (isset($filter)) {
+            $filter = `%$filter%`;
+        } else {
+            $filter = "%";
+        }
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE categoryId = ? AND name LIKE ?',
+            function (\mysqli_stmt $stmt) use ($cid, $filter) {
+                $stmt->bind_param('is', $cid, $filter);
             }
         );
         $products = [];

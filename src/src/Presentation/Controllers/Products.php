@@ -17,7 +17,8 @@ use Presentation\MVC\ViewResult;
 class Products extends Controller {
     const PRODUCT_NOT_FOUND = "Product Not Found";
     const PRODUCT_ID = "pid";
-    const RATING_ID = "ratingId";
+    const CATEGORY_ID = "cid";
+    const SEARCH = "search";
 
     public function __construct(
         private ProductsQuery $productsQuery,
@@ -29,16 +30,34 @@ class Products extends Controller {
     ) {
     }
 
-    public function GET_Index(): ViewResult {
-        $cid = null;
-        $this->tryGetParam("cid", $cid);
-
-        return $this->view("productlist", [
-            "products" => $this->productsQuery->execute($cid),
+    public function GET_Index(): ActionResult {
+        $this->tryGetParam(self::CATEGORY_ID, $cid);
+        $this->tryGetParam(self::SEARCH, $search);
+        $cid = trim($cid) === "" ? null : $cid;
+        $search = trim($search) == "" ? null : $search;
+        $data = [
+            "products" => $this->productsQuery->execute($cid, $search),
             "categories" => $this->categoriesQuery->execute(),
-            "user" => $this->loggedInUserQuery->execute(),
-            "selectedCategory" => $cid
-        ]);
+            "user" => $this->loggedInUserQuery->execute()
+        ];
+        if (isset($cid)) {
+            $data["selectedCategory"] = $cid;
+        }
+        if (isset($search)) {
+            $data["search"] = $search;
+        }
+        return $this->view("productlist", $data);
+    }
+
+    public function POST_Search(): ActionResult {
+        $params = [];
+        if ($this->tryGetParam(self::CATEGORY_ID, $cid)) {
+            $params[self::CATEGORY_ID] = $cid;
+        }
+        if ($this->tryGetParam(self::SEARCH, $search)) {
+            $params[self::SEARCH] = $search;
+        }
+        return $this->redirect("Products", "Index", params: $params);
     }
 
     public function Get_Details(): ActionResult {
