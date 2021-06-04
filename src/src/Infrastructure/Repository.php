@@ -4,14 +4,16 @@
 namespace Infrastructure;
 
 
+use Application\Entities\Category;
 use Application\Entities\Product;
 use Application\Entities\Rating;
 use Application\Entities\User;
+use Application\Interfaces\CategoryRepository;
 use Application\Interfaces\ProductRepository;
 use Application\Interfaces\RatingRepository;
 use Application\Interfaces\UserRepository;
 
-class Repository implements ProductRepository, UserRepository, RatingRepository {
+class Repository implements ProductRepository, UserRepository, RatingRepository, CategoryRepository {
 
     public function __construct(
         private string $server,
@@ -48,18 +50,51 @@ class Repository implements ProductRepository, UserRepository, RatingRepository 
         return $statement;
     }
 
+    public function findCategoryById(int $id): ?Category {
+        $conn = $this->getConnection();
+        $stmt = $this->executeStatement(
+            $conn,
+            'SELECT id, name FROM categories WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($id) {
+                $stmt->bind_param("i", $id);
+            }
+        );
+        $category = null;
+        $stmt->bind_result($cid, $name);
+        if($stmt->fetch()) {
+            $category = new Category($cid, $name);
+        }
+        return $category;
+    }
+
+    public function findAllCategories(): array {
+        $conn = $this->getConnection();
+        $query = $this->executeQuery(
+            $conn,
+            'SELECT id, name FROM categories'
+        );
+        $categories = [];
+        while ($category = $query->fetch_object()) {
+            $categories[] = new Category(
+                $category->id,
+                $category->name,
+            );
+        }
+        return $categories;
+    }
 
     public function findAllProducts(): array {
         $products = [];
         $conn = $this->getConnection();
         $result = $this->executeQuery(
             $conn,
-            'SELECT id, userId, name, manufacturer, description FROM products'
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products'
         );
         while ($product = $result->fetch_object()) {
             $products[] = new Product(
                 $product->id,
                 $product->userId,
+                $product->categoryId,
                 $product->name,
                 $product->manufacturer,
                 $product->description,
@@ -72,15 +107,15 @@ class Repository implements ProductRepository, UserRepository, RatingRepository 
         $conn = $this->getConnection();
         $statement = $this->executeStatement(
             $conn,
-            'SELECT id, userId, name, manufacturer, description FROM products WHERE id = ?',
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE id = ?',
             function (\mysqli_stmt $stmt) use ($pid) {
                 $stmt->bind_param('i', $pid);
             }
         );
         $product = null;
-        $statement->bind_result($id, $userId, $name, $manufacturer, $description);
+        $statement->bind_result($id, $userId, $categoryId, $name, $manufacturer, $description);
         if ($statement->fetch()) {
-            $product = new Product($id, $userId, $name, $manufacturer, $description);
+            $product = new Product($id, $userId, $categoryId, $name, $manufacturer, $description);
         }
         return $product;
     }

@@ -4,6 +4,7 @@
 <body>
 <?php $render('partial/navbar', $data) ?>
 <div class="container mt-3 mb-5 w-75 d-flex flex-column flex-wrap justify-content-center">
+
     <?php foreach ($data['products'] as $product) { ?>
         <div class="card mb-3">
             <div class="card-body">

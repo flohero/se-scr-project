@@ -58,7 +58,7 @@ class Products extends Controller {
             "user" => $user,
             "product" => $product,
             "ratings" => $this->ratingsByProductQuery->execute($pid),
-            "userRating" => $this->ratingByUserAndProductQuery->execute($user->getId(), $pid)
+            "userRating" => $user != null ? $this->ratingByUserAndProductQuery->execute($user->getId(), $pid) : null
         ]);
     }
 

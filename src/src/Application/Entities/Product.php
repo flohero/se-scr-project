@@ -8,6 +8,7 @@ class Product {
     public function __construct(
         private int $id,
         private int $userId,
+        private int $categoryId,
         private string $name,
         private string $manufacturer,
         private string $description
@@ -20,6 +21,10 @@ class Product {
 
     public function getUserId(): int {
         return $this->userId;
+    }
+
+    public function getCategoryId(): int {
+        return $this->categoryId;
     }
 
     public function getName(): string {
