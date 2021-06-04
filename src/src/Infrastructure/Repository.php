@@ -200,7 +200,8 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         );
         return $statement->insert_id;
     }
-    public function updateProduct(int $pid, int $category, string $name, string$manufacturer, string $content): bool {
+
+    public function updateProduct(int $pid, int $category, string $name, string $manufacturer, string $content): bool {
         $conn = $this->getConnection();
         $stmt = $this->executeStatement(
             $conn,

@@ -19,7 +19,7 @@ class ProductDetailsQuery {
     public function execute(int $pid): ?ProductDTO {
         $product = $this->productRepository->findProductById($pid);
         $productDTO = null;
-        if($product != null) {
+        if ($product != null) {
             $userDTO = $this->userByIdQuery->execute($product->getUserId());
             $productDTO = new ProductDTO(
                 $product->getId(),

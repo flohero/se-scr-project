@@ -22,7 +22,7 @@ class CreateProductCommand {
             return null;
         }
         $category = $this->categoryByIdQuery->execute($categoryId);
-        if(!isset($category)) {
+        if (!isset($category)) {
             return null;
         }
         return $this->productRepository->insertProduct($user->getId(), $categoryId, $name, $manufacturer, $description);

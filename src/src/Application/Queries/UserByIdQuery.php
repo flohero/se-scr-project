@@ -14,7 +14,7 @@ class UserByIdQuery {
     public function execute(int $id): ?UserDTO {
         $user = $this->userRepository->findUserById($id);
         $userDTO = null;
-        if($user != null) {
+        if ($user != null) {
             $userDTO = new UserDTO($user->getId(), $user->getUsername());
         }
         return $userDTO;

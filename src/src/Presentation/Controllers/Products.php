@@ -166,11 +166,14 @@ class Products extends Controller {
         }
         if ($this->tryGetParam(self::PRODUCT_ID, $pid)) {
             $product = $this->productDetailsQuery->execute($pid);
+            if (!isset($product)) {
+                return $this->redirect("Error", "404", $errors);
+            }
             if ($product->getUser()->getId() != $user->getId()) {
                 $this->redirect("Products", "Details", params: [self::PRODUCT_ID => $product->getId()]);
             }
         } else {
-            return $this->redirect("Error", "Index", $errors);
+            return $this->redirect("Error", "404", $errors);
         }
         $categories = $this->categoriesQuery->execute();
         $data = [

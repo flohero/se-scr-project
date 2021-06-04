@@ -4,8 +4,7 @@ namespace Presentation\MVC;
 
 use Exception;
 
-final class MVC
-{
+final class MVC {
     public function __construct(
         private string $viewPath = 'views/',
         private string $controllerNamespace = 'Presentation\\Controllers',
@@ -16,23 +15,19 @@ final class MVC
     ) {
     }
 
-    public function getViewPath(): string
-    {
+    public function getViewPath(): string {
         return $this->viewPath;
     }
 
-    public function getControllerParameterName(): string
-    {
+    public function getControllerParameterName(): string {
         return $this->controllerParameterName;
     }
 
-    public function getActionParameterName(): string
-    {
+    public function getActionParameterName(): string {
         return $this->actionParameterName;
     }
 
-    public function buildActionLink(?string $controller = null, ?string $action, array $params = []): string
-    {
+    public function buildActionLink(?string $controller = null, ?string $action, array $params = []): string {
         $res = '?' . $this->controllerParameterName . '=' . rawurlencode($controller ?? $this->defaultController) . '&' . $this->actionParameterName . '=' . rawurlencode($action ?? $this->defaultAction);
         foreach ($params as $name => $value) {
             $res .= '&' . rawurlencode($name) . '=' . rawurlencode($value);
@@ -40,8 +35,7 @@ final class MVC
         return $res;
     }
 
-    public function handleRequest(\ServiceProvider $serviceProvider): void
-    {
+    public function handleRequest(\ServiceProvider $serviceProvider): void {
         // determine controller class
         $controllerName = $_REQUEST[$this->controllerParameterName] ?? $this->defaultController;
         $controller = $this->controllerNamespace . "\\$controllerName";

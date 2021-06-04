@@ -4,8 +4,6 @@
 namespace Application\DTOs;
 
 
-use Application\Entities\Product;
-
 class RatingDTO {
     public function __construct(
         private int $id,

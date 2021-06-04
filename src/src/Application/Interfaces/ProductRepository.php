@@ -20,5 +20,5 @@ interface ProductRepository {
 
     public function insertProduct(int $userId, int $categoryId, string $name, string $manufacturer, string $description): ?int;
 
-    public function updateProduct(int $pid, int $category, string $name, string$manufacturer, string $content): bool;
+    public function updateProduct(int $pid, int $category, string $name, string $manufacturer, string $content): bool;
 }

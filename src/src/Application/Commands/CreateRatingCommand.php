@@ -16,7 +16,7 @@ class CreateRatingCommand {
 
     public function execute(int $productId, int $score, ?string $title, ?string $content): ?int {
         $userId = $this->authenticationService->userId();
-        if($userId == null) {
+        if ($userId == null) {
             return null;
         }
         $title = trim($title);

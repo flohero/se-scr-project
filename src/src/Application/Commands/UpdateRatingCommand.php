@@ -4,8 +4,6 @@
 namespace Application\Commands;
 
 
-use Application\DTOs\RatingDTO;
-use Application\Entities\Rating;
 use Application\Interfaces\RatingRepository;
 
 class UpdateRatingCommand {

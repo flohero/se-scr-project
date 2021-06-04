@@ -1,7 +1,6 @@
 <?php
 
-final class ServiceProvider
-{
+final class ServiceProvider {
     private $serviceDescriptors = [];
     private $instances = [];
 
@@ -9,8 +8,7 @@ final class ServiceProvider
     private const SERVICE_FACTORY = 'factory';
     private const SERVICE_IS_SINGLETON = 'singleton';
 
-    public function register(string $serviceType, string|callable|null $implementation = null, bool $isSingleton = false): void
-    {
+    public function register(string $serviceType, string|callable|null $implementation = null, bool $isSingleton = false): void {
         $factory = match (true) {
             is_string($implementation) => function () use ($implementation) {
                 return $this->resolve($implementation);
@@ -27,8 +25,7 @@ final class ServiceProvider
         ];
     }
 
-    public function resolve(string $serviceType): object
-    {
+    public function resolve(string $serviceType): object {
         // look up service descriptor
         $sd = $this->serviceDescriptors[$serviceType] ?? null;
         if ($sd === null) {
@@ -47,8 +44,7 @@ final class ServiceProvider
         return $instance;
     }
 
-    private function createInstance(string $className): object
-    {
+    private function createInstance(string $className): object {
         $params = [];
         $ctor = (new \ReflectionClass($className))->getConstructor();
         if ($ctor !== null) {

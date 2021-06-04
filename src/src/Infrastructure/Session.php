@@ -11,7 +11,7 @@ class Session implements \Application\Interfaces\Session {
     }
 
     public function get(string $key): mixed {
-        return  $_SESSION[$key] ?? null;
+        return $_SESSION[$key] ?? null;
     }
 
     public function put(string $key, mixed $value): void {

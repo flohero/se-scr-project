@@ -2,14 +2,11 @@
 
 namespace Presentation\MVC;
 
-final class ViewRenderer
-{
-    private function __construct()
-    {
+final class ViewRenderer {
+    private function __construct() {
     }
 
-    public static function render(MVC $mvc, string $view, mixed $data): void
-    {
+    public static function render(MVC $mvc, string $view, mixed $data): void {
         // define helper functions for view rendering
         $render = function (string $view, mixed $data) use ($mvc) {
             self::render($mvc, $view, $data);
@@ -21,7 +18,7 @@ final class ViewRenderer
             $cc = $cssClass !== null ? " class=\"$cssClass\"" : '';
             echo "<form method=\"$method\" action=\"?\"$cc>";
             foreach ($params as $name => $value) {
-                echo ("<input type=\"hidden\" name=\"$name\" value=\"$value\">");
+                echo("<input type=\"hidden\" name=\"$name\" value=\"$value\">");
             }
             echo "<input type=\"hidden\" name=\"{$mvc->getControllerParameterName()}\" value=\"$controller\">";
             echo "<input type=\"hidden\" name=\"{$mvc->getActionParameterName()}\" value=\"$action\">";

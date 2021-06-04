@@ -16,7 +16,7 @@ class CategoryByIdQuery {
     public function execute(int $categoryId): ?CategoryDTO {
         $category = $this->categoryRepository->findCategoryById($categoryId);
         $categoryDTO = null;
-        if(isset($category)) {
+        if (isset($category)) {
             $categoryDTO = new CategoryDTO(
                 $category->getId(),
                 $category->getName(),

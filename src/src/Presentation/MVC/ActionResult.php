@@ -2,7 +2,6 @@
 
 namespace Presentation\MVC;
 
-abstract class ActionResult
-{
+abstract class ActionResult {
     public abstract function handle(MVC $mvc): void;
 }

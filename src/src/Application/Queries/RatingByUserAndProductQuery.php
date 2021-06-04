@@ -18,7 +18,7 @@ class RatingByUserAndProductQuery {
     public function execute(int $userId, int $pid): ?RatingDTO {
         $rating = $this->ratingRepository->findRatingByUserAndProduct($userId, $pid);
         $ratingDTO = null;
-        if(isset($rating)) {
+        if (isset($rating)) {
             $ratingDTO = new RatingDTO(
                 $rating->getId(),
                 $this->productDetailsQuery->execute($rating->getProductId()),

@@ -18,7 +18,7 @@ class RatingsByProductQuery {
     public function execute(int $rid): array {
         $ratings = $this->ratingRepository->findRatingsByProduct($rid);
         $ratingDTOs = [];
-        foreach($ratings as $rating) {
+        foreach ($ratings as $rating) {
             $ratingDTOs[] = new RatingDTO(
                 $rating->getId(),
                 $this->productDetailsQuery->execute($rating->getProductId()),

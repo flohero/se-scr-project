@@ -4,8 +4,8 @@
 namespace Application\Queries;
 
 
-use Application\Interfaces\ProductRepository;
 use Application\DTOs\ProductDTO;
+use Application\Interfaces\ProductRepository;
 
 class ProductsQuery {
     public function __construct(

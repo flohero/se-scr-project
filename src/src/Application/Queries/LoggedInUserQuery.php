@@ -17,11 +17,11 @@ class LoggedInUserQuery {
 
     public function execute(): ?UserDTO {
         $id = $this->authenticationService->userId();
-        if($id == null) {
+        if ($id == null) {
             return null;
         }
         $user = $this->userRepository->findUserById($id);
-        if($user == null) {
+        if ($user == null) {
             return null;
         }
         return new UserDTO($user->getId(), $user->getUsername());
