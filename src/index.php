@@ -21,11 +21,14 @@ $sp->register(\Application\Queries\ProductDetailsQuery::class);
 $sp->register(\Application\Queries\LoggedInUserQuery::class);
 $sp->register(\Application\Queries\RatingsByProductQuery::class);
 $sp->register(\Application\Queries\RatingByUserAndProductQuery::class);
+$sp->register(\Application\Queries\RatingByIdQuery::class);
 
 $sp->register(\Application\Commands\RegisterCommand::class);
 $sp->register(\Application\Commands\LoginCommand::class);
 $sp->register(\Application\Commands\LogoutCommand::class);
 $sp->register(\Application\Commands\CreateRatingCommand::class);
+$sp->register(\Application\Commands\UpdateRatingCommand::class);
+$sp->register(\Application\Commands\DeleteRatingCommand::class);
 
 // --- Services
 $sp->register(\Application\Services\AuthenticationService::class);

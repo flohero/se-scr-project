@@ -181,15 +181,59 @@ class Repository implements ProductRepository, UserRepository, RatingRepository 
         $statement = $this->executeStatement(
             $conn,
             'SELECT id, productId, userId, score, created, title, content FROM ratings WHERE userId = ? AND productId = ?',
-            function (\mysqli_stmt $stmt) use($userId, $pid) {
+            function (\mysqli_stmt $stmt) use ($userId, $pid) {
                 $stmt->bind_param("ii", $userId, $pid);
             }
         );
         $statement->bind_result($id, $productId, $userId, $score, $created, $title, $content);
         $rating = null;
-        if($statement->fetch()) {
+        if ($statement->fetch()) {
             $rating = new Rating($id, $productId, $userId, $score, new \DateTime($created), $title, $content);
         }
         return $rating;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function findRatingById(int $rid): ?Rating {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, productId, userId, score, created, title, content FROM ratings WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($rid) {
+                $stmt->bind_param("i", $rid);
+            }
+        );
+        $statement->bind_result($id, $productId, $userId, $score, $created, $title, $content);
+        $rating = null;
+        if ($statement->fetch()) {
+            $rating = new Rating($id, $productId, $userId, $score, new \DateTime($created), $title, $content);
+        }
+        return $rating;
+    }
+
+    public function updateRating(int $rid, int $score, ?string $title, ?string $content): bool {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'UPDATE ratings SET score = ?, title = ?, content = ? WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($rid, $score, $title, $content) {
+                $stmt->bind_param("issi", $score, $title, $content, $rid);
+            }
+        );
+        return $statement->affected_rows > 0;
+    }
+
+    public function deleteRating(int $rid): bool {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'DELETE FROM ratings WHERE id = ?',
+            function (\mysqli_stmt $stmt) use ($rid) {
+                $stmt->bind_param("i", $rid);
+            }
+        );
+        return $statement->affected_rows > 0;
     }
 }

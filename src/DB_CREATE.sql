@@ -30,6 +30,19 @@ CREATE TABLE IF NOT EXISTS `product_rating`.`users`
 )
     ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `product_rating`.`users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `product_rating`.`categories`;
+
+CREATE TABLE IF NOT EXISTS `product_rating`.`categories`
+(
+    `id`   INT         NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NOT NULL UNIQUE,
+    PRIMARY KEY (`id`),
+    UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE
+)
+    ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `product_rating`.`products`
@@ -40,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `product_rating`.`products`
 (
     `id`           INT           NOT NULL AUTO_INCREMENT,
     `userId`       INT           NOT NULL,
+    `categoryId`     INT           NOT NULL,
     `name`         VARCHAR(255)  NOT NULL,
     `manufacturer` VARCHAR(255)  NOT NULL,
     `description`  VARCHAR(1000) NOT NULL,
@@ -48,6 +62,11 @@ CREATE TABLE IF NOT EXISTS `product_rating`.`products`
     CONSTRAINT `fk_products_users`
         FOREIGN KEY (`userId`)
             REFERENCES `product_rating`.`users` (`id`)
+            ON DELETE NO ACTION
+            ON UPDATE NO ACTION,
+    CONSTRAINT `fk_products_categories`
+            FOREIGN KEY (`categoryId`)
+            REFERENCES `product_rating`.`categories` (`id`)
             ON DELETE NO ACTION
             ON UPDATE NO ACTION
 )

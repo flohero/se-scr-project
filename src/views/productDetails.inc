@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+<?php $ratingExists = isset ($data["userRating"]); ?>
 <?php $render('partial/head', $data) ?>
 <body>
 <?php $render('partial/navbar', $data) ?>
@@ -24,27 +25,46 @@
             <p class="text-muted">Created by <?php echo $data["product"]->getUser()->getUsername() ?></p>
         </div>
         <div class="tab-pane fade show active" id="reviews" role="tabpanel">
+            <?php $formParams = [] ?>
             <?php if ($data["user"] != null) { ?>
-                <?php $beginForm('Rating', 'Create', params: ["pid" => $data["product"]->getId()], method: 'post'); ?>
+                <?php if ($ratingExists) { ?>
+                    <?php $formParams["ratingId"] = $data["userRating"]->getId() ?>
+                <?php } ?>
+                <?php $formParams = ["pid" => $data["product"]->getId()] ?>
+                <?php $beginForm('Rating', $ratingExists ? 'Update' : 'Create', params: $formParams, method: 'post'); ?>
                 <h1>Review this Product</h1>
-                <?php $render("partial/starRating", []) ?>
+                <?php if ($ratingExists) { ?>
+                    <?php $render("partial/starRating", ["score" => $data["userRating"]->getScore()]) ?>
+                <?php } else { ?>
+                    <?php $render("partial/starRating", []) ?>
+                <?php } ?>
                 <div class="form-group mt-3">
                     <label for="title">Title</label>
-                    <input type="text" name="title" class="form-control" id="title" placeholder="Title">
+                    <input type="text" name="title" class="form-control" id="title" placeholder="Title"
+                        <?php if ($ratingExists) echo 'value="' . $data["userRating"]->getTitle() . '"' ?>>
                 </div>
                 <div class="form-group mt-3">
                     <label for="content">Content</label>
-                    <textarea class="form-control" id="content" name="content" rows="3" placeholder="Your Review"></textarea>
+                    <textarea class="form-control" id="content" name="content"
+                              placeholder="Your Review"><?php if ($ratingExists) echo $data["userRating"]->getContent() ?></textarea>
                 </div>
                 <div class="mt-3 form-group">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
                 <?php $endForm(); ?>
+                <?php if ($ratingExists) { ?>
+                    <?php $beginForm('Rating', 'Delete', params: ["ratingId" => $data["userRating"]->getId()], method: 'post'); ?>
+                    <div class="mt-3 form-group">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </div>
+                    <?php $endForm(); ?>
+                <?php } ?>
                 <?php $render("partial/errors", $data); ?>
                 <hr/>
             <?php } ?>
             <?php if ($data["ratings"] != null && count($data["ratings"]) > 0) { ?>
                 <?php foreach ($data["ratings"] as $rating) { ?>
+                    <?php if ($ratingExists && $data["userRating"]->getId() === $rating->getId()) continue; ?>
                     <div class="card mt-3">
                         <div class="card-body">
                             <?php if ($rating->getTitle() !== null) { ?>
@@ -52,7 +72,9 @@
                             <?php } ?>
 
                             <h5 class="card-title star">
-                                <?php for ($score = 0; $score < $rating->getScore(); $score++) { ?>
+                                <?php for ($score = 0;
+                                           $score < $rating->getScore();
+                                           $score++) { ?>
                                     ★
                                 <?php } ?>
                             </h5>
