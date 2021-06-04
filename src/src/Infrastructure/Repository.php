@@ -188,6 +188,19 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         return $products;
     }
 
+    public function insertProduct(int $userId, int $categoryId, string $name, string $manufacturer, string $description): ?int {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'INSERT INTO products (userId, categoryId, name, manufacturer, description) VALUES (?, ?, ?, ?, ?)',
+            function (\mysqli_stmt $stmt) use ($userId, $categoryId, $name, $manufacturer, $description) {
+                $stmt->bind_param('iisss', $userId, $categoryId, $name, $manufacturer, $description);
+                $stmt->bind_param('iisss', $userId, $categoryId, $name, $manufacturer, $description);
+            }
+        );
+        return $statement->insert_id;
+    }
+
     public function insertUser(string $username, string $password): int {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $conn = $this->getConnection();

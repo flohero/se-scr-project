@@ -23,6 +23,7 @@ $sp->register(\Application\Queries\RatingByIdQuery::class);
 $sp->register(\Application\Queries\CategoriesQuery::class);
 $sp->register(\Application\Queries\RatingCountPerProductQuery::class);
 $sp->register(\Application\Queries\AverageRatingScorePerProductQuery::class);
+$sp->register(\Application\Queries\CategoryByIdQuery::class);
 
 $sp->register(\Application\Commands\RegisterCommand::class);
 $sp->register(\Application\Commands\LoginCommand::class);
@@ -30,6 +31,7 @@ $sp->register(\Application\Commands\LogoutCommand::class);
 $sp->register(\Application\Commands\CreateRatingCommand::class);
 $sp->register(\Application\Commands\UpdateRatingCommand::class);
 $sp->register(\Application\Commands\DeleteRatingCommand::class);
+$sp->register(\Application\Commands\CreateProductCommand::class);
 
 // --- Services
 $sp->register(\Application\Services\AuthenticationService::class);

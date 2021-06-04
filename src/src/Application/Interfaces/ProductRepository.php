@@ -17,4 +17,6 @@ interface ProductRepository {
     public function findAllProductsByCategory(int $cid): array;
 
     public function findAllProductsByCategoryAndName(int $cid, ?string $filter): array;
+
+    public function insertProduct(int $userId, int $categoryId, string $name, string $manufacturer, string $description): ?int;
 }

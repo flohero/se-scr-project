@@ -10,7 +10,7 @@
                 </li>
                 <div class="form-inline my-2 my-lg-0">
                     <?php if (isset($data["user"])) { ?>
-                        <?php $link("Add", "Products", "Add", cssClass: 'btn btn-success my-2 my-sm-0'); ?>
+                        <?php $link("Add", "Products", "Create", cssClass: 'btn btn-success my-2 my-sm-0'); ?>
                     <?php } ?>
                 </div>
             </ul>
