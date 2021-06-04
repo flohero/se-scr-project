@@ -63,3 +63,8 @@
     color: #000;
     text-shadow: 0 0 5px #FFD400;
 }
+
+.star {
+    color: #FFD400;
+    font-size: 3rem;
+}

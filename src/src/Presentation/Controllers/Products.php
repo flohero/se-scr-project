@@ -7,17 +7,20 @@ namespace Presentation\Controllers;
 use Application\Queries\LoggedInUserQuery;
 use Application\Queries\ProductDetailsQuery;
 use Application\Queries\ProductsQuery;
+use Application\Queries\RatingsByProductQuery;
 use Presentation\MVC\ActionResult;
 use Presentation\MVC\Controller;
 use Presentation\MVC\ViewResult;
 
 class Products extends Controller {
     const PRODUCT_NOT_FOUND = "Product Not Found";
+    const PRODUCT_ID = "pid";
 
     public function __construct(
         private ProductsQuery $productsQuery,
         private LoggedInUserQuery $loggedInUserQuery,
-        private ProductDetailsQuery $productDetailsQuery
+        private ProductDetailsQuery $productDetailsQuery,
+        private RatingsByProductQuery $ratingsByProductQuery
     ) {
     }
 
@@ -32,7 +35,8 @@ class Products extends Controller {
         $errors = [];
         $pidstr = "";
         $product = null;
-        if(!$this->tryGetParam("pid", $pidstr)) {
+        $pid = 0;
+        if(!$this->tryGetParam(self::PRODUCT_ID, $pidstr)) {
             $errors[] = self::PRODUCT_NOT_FOUND;
         } else {
             $pid = intval($pidstr);
@@ -48,7 +52,8 @@ class Products extends Controller {
         }
         return $this->view("productDetails", [
             "user" => $this->loggedInUserQuery->execute(),
-            "product" => $product
+            "product" => $product,
+            "ratings" => $this->ratingsByProductQuery->execute($pid)
         ]);
     }
 

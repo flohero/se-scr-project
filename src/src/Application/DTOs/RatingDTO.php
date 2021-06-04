@@ -1,14 +1,16 @@
 <?php
 
 
-namespace Application\Entities;
+namespace Application\DTOs;
 
 
-class Rating {
+use Application\Entities\Product;
+
+class RatingDTO {
     public function __construct(
         private int $id,
-        private int $productId,
-        private int $userId,
+        private ProductDTO $product,
+        private UserDTO $user,
         private float $score,
         private \DateTime $created,
         private ?string $title,
@@ -20,12 +22,12 @@ class Rating {
         return $this->id;
     }
 
-    public function getProductId(): int {
-        return $this->productId;
+    public function getProduct(): ProductDTO {
+        return $this->product;
     }
 
-    public function getUserId(): int {
-        return $this->userId;
+    public function getUser(): UserDTO {
+        return $this->user;
     }
 
     public function getScore(): float {
@@ -43,7 +45,6 @@ class Rating {
     public function getContent(): ?string {
         return $this->content;
     }
-
 
 
 }

@@ -22,4 +22,10 @@ VALUES (2, 'BiancaProfessional Espresso Coffee Maker', 'Lelit', ' Only for exper
 ESPRESSO AND CAPPUCCINO AS AT THE BAR - Thanks to the dual boiler technology and the ability to manually control the water flow, PL162T is the ideal solution for those who want a high level of coffee along with continuous steam distribution to prepare many cappuccinos, caffè latte, caffè mocha, caffè Americano, tea and herbal tea. By rotating the mechanical paddle attached to the brewing unit, the water flow in the brewing unit can be regulated and the brewing pressure can be optimally controlled at every stage of extraction.');
 
 
+insert into ratings (productId, userId, score, title, content) VALUES
+(1, 1, 4, 'best coffee machine', 'I love this coffee machine, but I cant sleep anymore');
+
+insert into ratings (productId, userId, score, title, content) VALUES
+(1, 2, 1, 'Worst Coffee', 'I hate this machine, it tastes too bitter and its way too big');
+
 commit;

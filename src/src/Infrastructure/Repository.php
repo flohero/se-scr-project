@@ -5,9 +5,13 @@ namespace Infrastructure;
 
 
 use Application\Entities\Product;
+use Application\Entities\Rating;
 use Application\Entities\User;
+use Application\Interfaces\ProductRepository;
+use Application\Interfaces\RatingRepository;
+use Application\Interfaces\UserRepository;
 
-class Repository implements \Application\Interfaces\ProductRepository, \Application\Interfaces\UserRepository {
+class Repository implements ProductRepository, UserRepository, RatingRepository {
 
     public function __construct(
         private string $server,
@@ -64,7 +68,7 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
         return $products;
     }
 
-    public function findProductById(int $pid): Product {
+    public function findProductById(int $pid): ?Product {
         $conn = $this->getConnection();
         $statement = $this->executeStatement(
             $conn,
@@ -75,14 +79,14 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
         );
         $product = null;
         $statement->bind_result($id, $userId, $name, $manufacturer, $description);
-        if($statement->fetch()) {
+        if ($statement->fetch()) {
             $product = new Product($id, $userId, $name, $manufacturer, $description);
         }
         return $product;
     }
 
     public function insertUser(string $username, string $password): int {
-        $hash = password_hash($password,  PASSWORD_DEFAULT);
+        $hash = password_hash($password, PASSWORD_DEFAULT);
         $conn = $this->getConnection();
         $statement = $this->executeStatement(
             $conn,
@@ -105,7 +109,7 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
             }
         );
         $statement->bind_result($id, $username, $password);
-        if($statement->fetch()) {
+        if ($statement->fetch()) {
             $user = new User($id, $username, $password);
         }
         return $user;
@@ -113,7 +117,7 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
 
     public function findUserByUsernameAndPassword(string $username, string $password): ?User {
         $user = $this->findUserByUsername($username);
-        if($user != null && !password_verify($password, $user->getPassword())) {
+        if ($user != null && !password_verify($password, $user->getPassword())) {
             $user = null;
         }
         return $user;
@@ -130,9 +134,62 @@ class Repository implements \Application\Interfaces\ProductRepository, \Applicat
         );
         $user = null;
         $statement->bind_result($id, $username, $password);
-        if($statement->fetch()) {
+        if ($statement->fetch()) {
             $user = new User($id, $username, $password);
         }
         return $user;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function findRatingsByProduct(int $rid): array {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, productId, userId, score, created, title, content FROM ratings WHERE productId = ? ORDER BY created',
+            function (\mysqli_stmt $stmt) use ($rid) {
+                $stmt->bind_param('i', $rid);
+            }
+        );
+        $ratings = [];
+        $statement->bind_result($id, $productId, $userId, $score, $created, $title, $content);
+        while ($statement->fetch()) {
+            $ratings[] = new Rating($id, $productId, $userId, $score, new \DateTime($created), $title, $content);
+        }
+        return $ratings;
+    }
+
+    public function insertRating(int $productId, int $userId, int $score, ?string $title, ?string $content): int {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'INSERT INTO ratings (productId, userId, score, title, content) VALUES (?, ?, ?, ?, ?)',
+            function (\mysqli_stmt $stmt) use ($productId, $userId, $score, $title, $content) {
+                $stmt->bind_param('iiiss', $productId, $userId, $score,
+                    $title, $content);
+            }
+        );
+        return $statement->insert_id;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function findRatingByUserAndProduct(int $userId, int $pid): ?Rating {
+        $conn = $this->getConnection();
+        $statement = $this->executeStatement(
+            $conn,
+            'SELECT id, productId, userId, score, created, title, content FROM ratings WHERE userId = ? AND productId = ?',
+            function (\mysqli_stmt $stmt) use($userId, $pid) {
+                $stmt->bind_param("ii", $userId, $pid);
+            }
+        );
+        $statement->bind_result($id, $productId, $userId, $score, $created, $title, $content);
+        $rating = null;
+        if($statement->fetch()) {
+            $rating = new Rating($id, $productId, $userId, $score, new \DateTime($created), $title, $content);
+        }
+        return $rating;
     }
 }

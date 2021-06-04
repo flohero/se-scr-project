@@ -19,9 +19,13 @@ $sp->register(\Application\Queries\UserByIdQuery::class);
 $sp->register(\Application\Queries\ProductsQuery::class);
 $sp->register(\Application\Queries\ProductDetailsQuery::class);
 $sp->register(\Application\Queries\LoggedInUserQuery::class);
+$sp->register(\Application\Queries\RatingsByProductQuery::class);
+$sp->register(\Application\Queries\RatingByUserAndProductQuery::class);
+
 $sp->register(\Application\Commands\RegisterCommand::class);
 $sp->register(\Application\Commands\LoginCommand::class);
 $sp->register(\Application\Commands\LogoutCommand::class);
+$sp->register(\Application\Commands\CreateRatingCommand::class);
 
 // --- Services
 $sp->register(\Application\Services\AuthenticationService::class);
@@ -36,6 +40,7 @@ $sp->register(\Infrastructure\Repository::class,
     });
 $sp->register(\Application\Interfaces\ProductRepository::class, \Infrastructure\Repository::class);
 $sp->register(\Application\Interfaces\UserRepository::class, \Infrastructure\Repository::class);
+$sp->register(\Application\Interfaces\RatingRepository::class, \Infrastructure\Repository::class);
 
 // --- Presentation
 // MVC - Framework
@@ -47,6 +52,7 @@ $sp->register(Presentation\MVC\MVC::class, function () {
 $sp->register(Presentation\Controllers\Home::class);
 $sp->register(Presentation\Controllers\User::class);
 $sp->register(Presentation\Controllers\Products::class);
+$sp->register(Presentation\Controllers\Rating::class);
 
 // === handle requests
 $sp->resolve(Presentation\MVC\MVC::class)->handleRequest($sp);

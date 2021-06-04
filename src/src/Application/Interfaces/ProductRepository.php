@@ -10,5 +10,5 @@ interface ProductRepository {
 
     public function findAllProducts(): array;
 
-    public function findProductById(int $pid): Product;
+    public function findProductById(int $pid): ?Product;
 }

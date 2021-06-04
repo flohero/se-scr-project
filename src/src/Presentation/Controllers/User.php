@@ -94,6 +94,7 @@ class User extends Controller {
                 'username' => $username
             ]);
         }
+        $this->loginCommand->execute($username, $password);
         return $this->redirect("Home", "Index");
     }
 }

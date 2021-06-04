@@ -1,4 +1,4 @@
-<?php if ($data["errors"] != null && count($data["errors"]) > 0) { ?>
+<?php if (isset($data["errors"]) && count($data["errors"]) > 0) { ?>
     <div class="alert alert-danger mt-3" role="alert">
         <?php if (count($data["errors"]) > 1) { ?>
             <ul>
