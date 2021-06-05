@@ -41,6 +41,8 @@ Das Datenbank-Modell besteht aus vier Tabellen:
 - Products: Jedes Produkt hat eine Kategorie und wurde von einem User erstellt.
 - Ratings: Enthält einen Score, sowie optional einen Titel und eine Beschreibung.
 Gehört zu einem Produkt und wird von einem User erstellt.
+Es wird automatisch das Erstelldatum gespeichert, dieses gibt, an wann die erste Version des Ratings veröffentlicht wurde,
+und wird bei einem Update nicht aktualisiert.
 
 === Schema
 
