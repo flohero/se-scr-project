@@ -1,4 +1,4 @@
-= Übung 06
+= Product Rating Portal
 :author: Florian Weingartshofer
 :email: <S1910307103@students.fh-hagenberg.at>
 :reproducible:
@@ -21,6 +21,13 @@
 Ist wird eine Produkt Bewertungsseite laut Angabe erstellt.
 Hier bei wird stark auf die in der LVA vorgestellte Architektur gesetzt.
 
+Es gibt eine einfach gehaltene Landing-Page, von dieser kann der User zum Login, Registrieren navigieren,
+oder er geht direkt zur Produktübersicht.
+Anders als im Bookshop werden die Produkte nicht mit einem Table dargestellt, sondern mit Bootstrap-Cards.
+
+Die einzelnen Produkte kann der User auch genauer betrachten und sie editieren, sollte er der Ersteller des Produkts sein.
+
+Es wurden einige Konzepte und Klassen aus dem Bookshop wiederverwendet.
 
 
 <<<
@@ -580,10 +587,68 @@ image::img/InvalidLogin.png[]
 
 Glücklicherweise kann er sich dann daran erinnern.
 
-.Valid Login<
+.Valid Login
 image::img/validLogin.png[]
 
+<<<
+=== Produkte browsen
+Der User möchte sich einige Produkte ansehen.
 
+.Productlist
+image::img/productlist.png[]
 
+<<<
 
+Er schaut sich die verschiedenen Kategorien an.
+
+.Categories
+image::img/categories.png[]
+
+<<<
+
+Und sucht auch nach bestimmten Produkten
+
+.Search
+image::img/search.png[]
+
+<<<
+=== Produkt Details und Kommentar
+
+Der User schaut sich die Maschine genauer an.
+
+.Detail View
+image::img/detailView.png[]
+
+<<<
+
+Er hat die selbe Maschine und möchte ein Kommentar dazu abgeben.
+
+.Add Rating
+image::img/rating.png[]
+
+<<<
+
+Dann kommt der User darauf, dass der Kommentar überflüssig war und löscht ihn gleich wieder.
+
+.Delete Rating
+image::img/deleteRating.png[]
+
+<<<
+
+Der Kommentar wurde erfolgreich gelöscht.
+
+.Deleted Rating
+image::img/deletedRating.png[]
+
+<<<
+=== Produkt hinzufügen
+Der User hat eine neue Kaffeesorte entdeckt und möchte sie hinzufügen.
+
+.Add Product
+image::img/addProduct.png[]
+
+Das Produkt wurde hinzugefügt.
+
+.Added Product
+image::img/addedProduct.png[]
 

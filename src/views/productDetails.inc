@@ -8,7 +8,7 @@
     <h1 class="bd-title"><?php echo $htmlOut($data["product"]->getName()) ?></h1>
     <div>
         <span class="text-muted">Produced by <?php echo $htmlOut($data["product"]->getManufacturer()) ?></span>
-        <?php if ($data["product"]->getUser()->getId() == $data["user"]->getId()) { ?>
+        <?php if (isset($data["user"]) && $data["product"]->getUser()->getId() == $data["user"]->getId()) { ?>
             <?php $link("Edit", "Products", "Update", params: ["pid" => $data["product"]->getId()], cssClass: "mx-3 btn btn-outline-success") ?>
         <?php } ?>
     </div>
@@ -51,7 +51,7 @@
                 <div class="form-group mt-3">
                     <label for="content">Content</label>
                     <textarea class="form-control" id="content" name="content"
-                              placeholder="Your Review"><?php if ($ratingExists) echo $htmlOut($data["userRating"]->getContent()) ?></textarea>
+                              placeholder="Your Review"><?php if ($ratingExists) echo $data["userRating"]->getContent() ?></textarea>
                 </div>
                 <div class="mt-3 form-group">
                     <button type="submit" class="btn btn-primary">Submit</button>

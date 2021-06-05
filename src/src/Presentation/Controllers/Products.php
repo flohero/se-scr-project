@@ -7,6 +7,7 @@ namespace Presentation\Controllers;
 use Application\Commands\CreateProductCommand;
 use Application\Commands\UpdateProductCommand;
 use Application\Queries\CategoriesQuery;
+use Application\Queries\CategoryByIdQuery;
 use Application\Queries\LoggedInUserQuery;
 use Application\Queries\ProductDetailsQuery;
 use Application\Queries\ProductsQuery;
@@ -35,6 +36,7 @@ class Products extends Controller {
         private CategoriesQuery $categoriesQuery,
         private CreateProductCommand $createProductCommand,
         private UpdateProductCommand $updateProductCommand,
+        private CategoryByIdQuery $categoryByIdQuery
     ) {
     }
 
@@ -116,7 +118,7 @@ class Products extends Controller {
             $data[self::CATEGORY] = $category;
         }
         if ($this->tryGetParam(self::CONTENT, $content)) {
-            $data[self::CATEGORY] = $content;
+            $data[self::CONTENT] = $content;
         }
         return $this->view("productAdd", $data);
     }
@@ -130,15 +132,23 @@ class Products extends Controller {
         $errors = [];
         if (!$this->tryGetParam(self::NAME, $name)) {
             $errors[] = "Name required";
+        } elseif(strlen($name) > 255) {
+            $errors[] = "Name can't be longer than 255 characters";
         }
         if (!$this->tryGetParam(self::MANUFACTURER, $manufacturer)) {
             $errors[] = "Manufacturer required";
+        } elseif(strlen($manufacturer) > 255) {
+            $errors[] = "Manufacturer can't be longer than 255 characters";
         }
         if (!$this->tryGetParam(self::CATEGORY, $category)) {
             $errors[] = "Category required";
+        } elseif($this->categoryByIdQuery->execute($category) == null) {
+            $errors[] = "This category does not exist";
         }
         if (!$this->tryGetParam(self::CONTENT, $content)) {
             $errors[] = "Content required";
+        } elseif(strlen($content) > 1000) {
+            $errors[] = "Content can't be longer than 1000 characters";
         }
         if (count($errors) == 0) {
             $pid = $this->createProductCommand->execute($category, $name, $manufacturer, $content);
@@ -149,12 +159,14 @@ class Products extends Controller {
             }
             $errors[] = "Could not insert Product";
         }
-        return $this->redirect("Products", "Create", params: [
+        return $this->view("productAdd", [
+            "user" => $this->loggedInUserQuery->execute(),
+            "categories" => $this->categoriesQuery->execute(),
             self::NAME => $name,
             self::MANUFACTURER => $manufacturer,
             self::CATEGORY => $category,
             self::CONTENT => $content,
-            self::ERRORS => join("\n", $errors)
+            self::ERRORS => $errors
         ]);
     }
 
@@ -194,25 +206,34 @@ class Products extends Controller {
         $errors = [];
         if (!$this->tryGetParam(self::NAME, $name)) {
             $errors[] = "Name required";
+        } elseif(strlen($name) > 255) {
+            $errors[] = "Name can't be longer than 255 characters";
         }
         if (!$this->tryGetParam(self::MANUFACTURER, $manufacturer)) {
             $errors[] = "Manufacturer required";
+        } elseif(strlen($manufacturer) > 255) {
+            $errors[] = "Manufacturer can't be longer than 255 characters";
         }
         if (!$this->tryGetParam(self::CATEGORY, $category)) {
             $errors[] = "Category required";
+        } elseif($this->categoryByIdQuery->execute($category) == null) {
+            $errors[] = "This category does not exist";
         }
         if (!$this->tryGetParam(self::CONTENT, $content)) {
             $errors[] = "Content required";
-        }
-        if (!$this->tryGetParam(self::PRODUCT_ID, $pid)) {
-            $errors[] = self::PRODUCT_NOT_FOUND;
+        } elseif(strlen($content) > 1000) {
+            $errors[] = "Content can't be longer than 1000 characters";
         }
         $product = null;
-        if (count($errors) == 0) {
+        if (!$this->tryGetParam(self::PRODUCT_ID, $pid)) {
+            $errors[] = self::PRODUCT_NOT_FOUND;
+        } else {
             $product = $this->productDetailsQuery->execute($pid);
             if (!isset($product)) {
                 $errors[] = self::PRODUCT_NOT_FOUND;
             }
+        }
+        if (count($errors) == 0) {
             $updated = $this->updateProductCommand->execute($product->getId(), $category, $name, $manufacturer, $content);
             if ($updated) {
                 return $this->redirect("Products", "Details", [

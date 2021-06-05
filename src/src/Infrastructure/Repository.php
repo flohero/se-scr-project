@@ -168,7 +168,7 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
 
     public function findAllProductsByCategoryAndName(int $cid, ?string $filter): array {
         if (isset($filter)) {
-            $filter = `%$filter%`;
+            $filter = "%" . $filter . "%";
         } else {
             $filter = "%";
         }

@@ -12,7 +12,7 @@
             <label for="search" class="visually-hidden">Password</label>
             <input type="text" class="form-control" id="search" name="search" placeholder="Start Typing" autofocus
                    required
-                   <?php if (isset($data["search"])) echo 'value="' . $htmlOut($data["search"]) . '"'; ?>
+                   <?php if (isset($data["search"])) echo 'value="' . $data["search"] . '"'; ?>
             >
         </div>
         <div class="col-auto">

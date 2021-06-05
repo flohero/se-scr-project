@@ -96,7 +96,7 @@ class Rating extends Controller {
             $rating = $this->ratingByIdQuery->execute($rid);
             if (!isset($rating)) {
                 $errors[] = self::RATING_DOES_NOT_EXISTS;
-            } else if ($user->getId() !== $rating->getUser()->getId()) {
+            } elseif ($user->getId() !== $rating->getUser()->getId()) {
                 $errors[] = self::THIS_IS_NOT_YOUR_RATING;
             }
         } else {
@@ -145,7 +145,7 @@ class Rating extends Controller {
             $rating = $this->ratingByIdQuery->execute($rid);
             if (!isset($rating)) {
                 $errors[] = self::RATING_DOES_NOT_EXISTS;
-            } else if ($user->getId() !== $rating->getUser()->getId()) {
+            } elseif ($user->getId() !== $rating->getUser()->getId()) {
                 $errors[] = self::THIS_IS_NOT_YOUR_RATING;
             }
         } else {
