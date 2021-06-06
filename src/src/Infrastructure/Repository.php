@@ -113,9 +113,9 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         $conn = $this->getConnection();
         $result = $this->executeStatement(
             $conn,
-            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE name LIKE ?',
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE (name LIKE ? OR manufacturer LIKE ?)',
             function (\mysqli_stmt $stmt) use ($filter) {
-                $stmt->bind_param("s", $filter);
+                $stmt->bind_param("ss", $filter, $filter);
             }
         );
         $result->bind_result($id, $userId, $categoryId, $name, $manufacturer, $descirption);
@@ -175,9 +175,9 @@ class Repository implements ProductRepository, UserRepository, RatingRepository,
         $conn = $this->getConnection();
         $statement = $this->executeStatement(
             $conn,
-            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE categoryId = ? AND name LIKE ?',
+            'SELECT id, userId, categoryId, name, manufacturer, description FROM products WHERE categoryId = ? AND (name LIKE ? OR manufacturer LIKE ?)',
             function (\mysqli_stmt $stmt) use ($cid, $filter) {
-                $stmt->bind_param('is', $cid, $filter);
+                $stmt->bind_param('iss', $cid, $filter, $filter);
             }
         );
         $products = [];
