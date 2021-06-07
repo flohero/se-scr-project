@@ -23,7 +23,7 @@
         </div>
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ms-auto">
-                <?php if ($data["user"] == null) { ?>
+                <?php if (!isset($data["user"])) { ?>
                     <li class="nav-item">
                         <?php $link("Login", "User", "Login", cssClass: 'nav-item nav-link'); ?>
                     </li>
